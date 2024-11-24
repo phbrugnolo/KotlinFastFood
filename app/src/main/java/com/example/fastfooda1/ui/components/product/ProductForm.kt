@@ -19,7 +19,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.fastfooda1.R
 import com.example.fastfooda1.models.Product
-import java.math.BigDecimal
 
 
 @Composable
@@ -62,7 +61,7 @@ fun ProductForm(
                     val newProduct = Product(
                         id = product?.id ?: 0,
                         name = name,
-                        price = BigDecimal(price),
+                        price = price.toDoubleOrNull() ?: 0.0,
                         image = product?.image ?: R.drawable.ic_launcher_background,
                         quantity = quantity.toIntOrNull() ?: 0
                     )

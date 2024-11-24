@@ -27,11 +27,9 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fastfooda1.R
-import com.example.fastfooda1.extensions.toBrazilianCurrency
 import com.example.fastfooda1.models.Product
 import com.example.fastfooda1.ui.theme.Purple40
 import com.example.fastfooda1.ui.theme.PurpleGrey40
-import java.math.BigDecimal
 
 @Composable
 fun ProductItem(
@@ -84,15 +82,23 @@ fun ProductItem(
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium
                 )
-                Text(
-                    text = product.price.toBrazilianCurrency(),
-                    Modifier.padding(top = 8.dp),
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight(400),
-                    color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyMedium
-                )
             }
+            Text(
+                text = product.price.toString(),
+                Modifier.padding(top = 8.dp),
+                fontSize = 14.sp,
+                fontWeight = FontWeight(400),
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = product.quantity.toString(),
+                Modifier.padding(top = 8.dp),
+                fontSize = 14.sp,
+                fontWeight = FontWeight(400),
+                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.bodyMedium
+            )
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -108,15 +114,15 @@ fun ProductItem(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//private fun ProductItemPreview() {
-//    ProductItem(
-//        Product(
-//            name = LoremIpsum(50).values.first(),
-//            price = BigDecimal("14.99"),
-//            image = R.drawable.ic_launcher_background,
-//            quantity = 50
-//        )
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+private fun ProductItemPreview() {
+    ProductItem(
+        Product(
+            name = LoremIpsum(50).values.first(),
+            price = 14.99,
+            image = R.drawable.ic_launcher_background,
+            quantity = 50
+        )
+    )
+}
