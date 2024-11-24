@@ -25,9 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.fastfooda1.controllers.CepController
 import com.example.fastfooda1.database.AppDataContainer
-import com.example.fastfooda1.models.ViaCepService
 import com.example.fastfooda1.ui.screens.customer.CustomerListScreen
 import com.example.fastfooda1.ui.screens.customer.EditCustomerScreen
 import com.example.fastfooda1.ui.screens.customer.InsertCustomerScreen
@@ -37,6 +35,7 @@ import com.example.fastfooda1.ui.screens.product.ProductListScreen
 import com.example.fastfooda1.ui.theme.FastFoodA1Theme
 import com.example.fastfooda1.ui.theme.Storefront
 import com.example.fastfooda1.viewmodels.CustomersViewModel
+import com.example.fastfooda1.viewmodels.CustomersViewModelFactory
 import com.example.fastfooda1.viewmodels.ProductsViewModel
 import com.example.fastfooda1.viewmodels.ProductsViewModelFactory
 import retrofit2.Retrofit
@@ -51,23 +50,32 @@ class MainActivity : ComponentActivity() {
         ProductsViewModelFactory(productsRepository)
     }
 
-    private lateinit var cepController: CepController
+    private val customersRepository by lazy {
+        AppDataContainer(applicationContext).customersRepository
+    }
+
+    private val customersViewModel: CustomersViewModel by viewModels {
+        CustomersViewModelFactory(customersRepository)
+    }
+
+
+//    private lateinit var cepController: CepController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://viacep.com.br/ws/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val service = retrofit.create(ViaCepService::class.java)
-
-        cepController = CepController(service)
+//        val retrofit = Retrofit.Builder()
+//            .baseUrl("https://viacep.com.br/ws/")
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//        val service = retrofit.create(ViaCepService::class.java)
+//
+//        cepController = CepController(service)
 
         setContent {
-            App(productsViewModel)
+            App(productsViewModel, customersViewModel)
         }
     }
 }
@@ -79,7 +87,10 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 }
 
 @Composable
-fun App(productsViewModel: ProductsViewModel) {
+fun App(
+    productsViewModel: ProductsViewModel,
+    customersViewModel: CustomersViewModel
+) {
     FastFoodA1Theme {
         Surface {
             val navController = rememberNavController()
@@ -91,6 +102,7 @@ fun App(productsViewModel: ProductsViewModel) {
                 NavigationHost(
                     navController = navController,
                     productsViewModel = productsViewModel,
+                    customersViewModel = customersViewModel,
                     modifier = Modifier.padding(innerPadding)
                 )
             }
