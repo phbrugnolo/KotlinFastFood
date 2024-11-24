@@ -1,9 +1,11 @@
 package com.example.fastfooda1
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,35 +20,52 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.fastfooda1.ui.screens.ProductHomeScreen
+import androidx.navigation.navArgument
+import com.example.fastfooda1.database.AppDataContainer
+import com.example.fastfooda1.ui.screens.EditProductScreen
+import com.example.fastfooda1.ui.screens.InsertProductScreen
+import com.example.fastfooda1.ui.screens.ProductListScreen
 import com.example.fastfooda1.ui.theme.FastFoodA1Theme
 import com.example.fastfooda1.ui.theme.Storefront
+import com.example.fastfooda1.viewmodels.ProductsViewModel
+import com.example.fastfooda1.viewmodels.ProductsViewModelFactory
 
 class MainActivity : ComponentActivity() {
+    private val productsRepository by lazy {
+        AppDataContainer(applicationContext).productsRepository
+    }
+
+    private val productsViewModel: ProductsViewModel by viewModels {
+        ProductsViewModelFactory(productsRepository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            App()
+            App(productsViewModel)
         }
     }
 }
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
-    object Products : Screen("products", "Products", Storefront)
-    object Customers : Screen("customers", "Customers", Icons.Default.Person)
-    object Sales : Screen("sales", "Sales", Icons.Default.ShoppingCart)
+    data object Products : Screen("products", "Products", Storefront)
+    data object Customers : Screen("customers", "Customers", Icons.Default.Person)
+    data object Sales : Screen("sales", "Sales", Icons.Default.ShoppingCart)
 }
 
 @Composable
-fun App() {
+fun App(productsViewModel: ProductsViewModel) {
     FastFoodA1Theme {
         Surface {
             val navController = rememberNavController()
@@ -55,7 +74,11 @@ fun App() {
                     NavigationBar(navController)
                 }
             ) { innerPadding ->
-                NavigationHost(navController, Modifier.padding(innerPadding))
+                NavigationHost(
+                    navController = navController,
+                    productsViewModel = productsViewModel,
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
         }
     }
@@ -89,18 +112,48 @@ fun NavigationBar(navController: NavHostController) {
 }
 
 @Composable
-fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifier) {
+fun NavigationHost(
+    navController: NavHostController, productsViewModel: ProductsViewModel,
+    modifier: Modifier = Modifier
+) {
     NavHost(
         navController = navController,
         startDestination = Screen.Products.route,
         modifier = modifier
     ) {
         composable(Screen.Products.route) {
-            ProductHomeScreen()
+            ProductListScreen(
+                viewModel = productsViewModel,
+                onNavigateToInsertProduct = { navController.navigate("add_product") },
+                onNavigateToEditProduct = { productId ->
+                    navController.navigate("edit_product/$productId")
+                }
+            )
         }
+        composable("add_product") {
+            InsertProductScreen(
+                viewModel = productsViewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = "edit_product/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getInt("productId")
+            if (productId != null) {
+                EditProductScreen(
+                    viewModel = productsViewModel,
+                    productId = productId,
+                    onBack = { navController.popBackStack() }
+                )
+            }
+        }
+
         composable(Screen.Customers.route) {
             CustomerScreen()
         }
+
         composable(Screen.Sales.route) {
             SalesScreen()
         }

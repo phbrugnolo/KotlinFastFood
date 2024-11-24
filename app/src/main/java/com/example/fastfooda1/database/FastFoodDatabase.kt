@@ -1,3 +1,5 @@
+package com.example.fastfooda1.database
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
