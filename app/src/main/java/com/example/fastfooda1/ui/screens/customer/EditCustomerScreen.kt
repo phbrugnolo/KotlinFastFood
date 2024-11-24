@@ -36,7 +36,7 @@ fun EditCustomerScreen(
             TextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Name") },
+                label = { Text("Nome") },
                 modifier = Modifier.fillMaxWidth()
             )
             TextField(
@@ -49,7 +49,7 @@ fun EditCustomerScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Row {
                 Button(onClick = onBack, modifier = Modifier.weight(1f)) {
-                    Text("Cancel")
+                    Text("Cancelar")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
@@ -64,7 +64,15 @@ fun EditCustomerScreen(
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Update")
+                    Text("Salvar")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(onClick = {
+                    viewModel.deleteCustomer(customer!!)
+                    onBack()
+                }
+                ) {
+                    Text("Deletar")
                 }
             }
         }

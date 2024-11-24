@@ -30,7 +30,7 @@ fun CustomerListScreen(
             onClick = onNavigateToInsertCustomer,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Add Customer")
+            Text("Cadastar cliente")
         }
         LazyColumn {
             items(customers) { customer ->
