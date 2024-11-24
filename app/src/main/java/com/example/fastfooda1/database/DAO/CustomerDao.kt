@@ -5,11 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
-import com.example.fastfooda1.models.Address
 import com.example.fastfooda1.models.Customer
-import com.example.fastfooda1.models.CustomerWithAddress
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -30,14 +27,4 @@ interface CustomerDao {
 
     @Delete
     suspend fun delete(customer: Customer)
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAddress(address: Address)
-
-    @Update
-    suspend fun updateAddress(address: Address)
-
-    @Transaction
-    @Query("SELECT * FROM customers WHERE id = :customerId")
-    fun getCustomerWithAddress(customerId: Int): Flow<CustomerWithAddress>
 }

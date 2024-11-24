@@ -19,6 +19,9 @@ class ProductsViewModel(private val repository: ProductsRepository) : ViewModel(
             initialValue = emptyList()
         )
 
+    fun getProduct(id: Int) = repository.getProductStream(id)
+
+
     fun insertProduct(product: Product) {
         viewModelScope.launch {
             repository.insertProduct(product)
@@ -36,4 +39,5 @@ class ProductsViewModel(private val repository: ProductsRepository) : ViewModel(
             repository.deleteProduct(product)
         }
     }
+
 }

@@ -24,13 +24,12 @@ fun EditProductScreen(
     productId: Int,
     onBack: () -> Unit
 ) {
-    val products by viewModel.products.collectAsState()
-    val product = products.find { it.id == productId }
+    val product by viewModel.getProduct(productId).collectAsState(initial = null)
 
     if (product != null) {
-        var name by remember { mutableStateOf(product.name) }
-        var price by remember { mutableStateOf(product.price.toString()) }
-        var quantity by remember { mutableStateOf(product.quantity.toString()) }
+        var name by remember { mutableStateOf(product!!.name) }
+        var price by remember { mutableStateOf(product!!.price.toString()) }
+        var quantity by remember { mutableStateOf(product!!.quantity.toString()) }
 
 
         Column(Modifier.padding(16.dp)) {
@@ -53,7 +52,7 @@ fun EditProductScreen(
             )
             Button(onClick = {
                 viewModel.updateProduct(
-                    product.copy(
+                    product!!.copy(
                         name = name,
                         price = price.toDoubleOrNull() ?: 0.0,
                         quantity = quantity.toIntOrNull() ?: 0
