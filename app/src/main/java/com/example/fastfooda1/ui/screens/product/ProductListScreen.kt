@@ -1,4 +1,4 @@
-package com.example.fastfooda1.ui.screens
+package com.example.fastfooda1.ui.screens.product
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
