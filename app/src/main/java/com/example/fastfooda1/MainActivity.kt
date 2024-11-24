@@ -96,7 +96,7 @@ fun NavigationHost(navController: NavHostController, modifier: Modifier = Modifi
         modifier = modifier
     ) {
         composable(Screen.Products.route) {
-            Text("Im get oppened")
+            ProductHomeScreen()
         }
         composable(Screen.Customers.route) {
             CustomerScreen()
