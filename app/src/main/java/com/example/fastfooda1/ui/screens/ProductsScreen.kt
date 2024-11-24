@@ -31,24 +31,11 @@ import com.example.fastfooda1.sampleData.sampleProducts
 import com.example.fastfooda1.ui.components.product.ProductItem
 import com.example.fastfooda1.ui.components.product.ProductsSection
 import com.example.fastfooda1.viewmodels.ProductViewModel
-import java.math.BigDecimal
 
 
 @Composable
-fun ProductHomeScreen(viewModel: ProductViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
-
-    val products by viewModel.products.collectAsState(initial = emptyList())
-
-    var isEditing by remember { mutableStateOf(false) }
-    var selectedProduct by remember { mutableStateOf<Product?>(null) }
-
-    if (isLandscape) {
-        LandscapeHomeScreen(products)
-    } else {
-        PortraitHomeScreen(products)
-    }
+fun ProductHomeScreen() {
+    PortraitHomeScreen()
 }
 
 
@@ -66,7 +53,7 @@ fun PortraitHomeScreen() {
             "Doces", listOf(
                 Product(
                     name = "Chocolate",
-                    price = BigDecimal("5.99"),
+                    price = 5.99,
                     image = R.drawable.ic_launcher_background,
                     quantity = 5
                 )
@@ -77,60 +64,60 @@ fun PortraitHomeScreen() {
     }
 }
 
-@Composable
-fun LandscapeHomeScreen() {
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 200.dp),
-        contentPadding = PaddingValues(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Text(
-                text = "Promoções",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-        }
-        items(sampleProducts) { product ->
-            ProductItem(product = product)
-        }
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Text(
-                text = "Doces",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-        }
-        items(
-            listOf(
-                Product(
-                    name = "Chocolate",
-                    price = BigDecimal("5.99"),
-                    image = R.drawable.ic_launcher_background,
-                    quantity = 5
-                )
-            )
-        ) { product ->
-            ProductItem(product = product)
-        }
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Text(
-                text = "Bebidas",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-        }
-        items(sampleProducts) { product ->
-            ProductItem(product = product)
-        }
-    }
-}
+//@Composable
+//fun LandscapeHomeScreen() {
+//    LazyVerticalGrid(
+//        columns = GridCells.Adaptive(minSize = 200.dp),
+//        contentPadding = PaddingValues(16.dp),
+//        horizontalArrangement = Arrangement.spacedBy(16.dp),
+//        verticalArrangement = Arrangement.spacedBy(16.dp)
+//    ) {
+//        item(span = { GridItemSpan(maxLineSpan) }) {
+//            Text(
+//                text = "Promoções",
+//                fontSize = 20.sp,
+//                fontWeight = FontWeight.Bold,
+//                modifier = Modifier.padding(bottom = 8.dp)
+//            )
+//        }
+//        items(sampleProducts) { product ->
+//            ProductItem(product = product)
+//        }
+//
+//        item(span = { GridItemSpan(maxLineSpan) }) {
+//            Text(
+//                text = "Doces",
+//                fontSize = 20.sp,
+//                fontWeight = FontWeight.Bold,
+//                modifier = Modifier.padding(bottom = 8.dp)
+//            )
+//        }
+//        items(
+//            listOf(
+//                Product(
+//                    name = "Chocolate",
+//                    price = 5.99,
+//                    image = R.drawable.ic_launcher_background,
+//                    quantity = 5
+//                )
+//            )
+//        ) { product ->
+//            ProductItem(product = product)
+//        }
+//
+//        item(span = { GridItemSpan(maxLineSpan) }) {
+//            Text(
+//                text = "Bebidas",
+//                fontSize = 20.sp,
+//                fontWeight = FontWeight.Bold,
+//                modifier = Modifier.padding(bottom = 8.dp)
+//            )
+//        }
+//        items(sampleProducts) { product ->
+//            ProductItem(product = product)
+//        }
+//    }
+//}
 
 @Preview(showSystemUi = true)
 @Composable

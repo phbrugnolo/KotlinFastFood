@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -82,39 +83,52 @@ fun ProductItem(
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium
                 )
+                Text(
+                    text = "Preço: ${product.price}",
+                    Modifier.padding(top = 8.dp),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(400),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    text = "Quantidade: ${product.quantity}",
+                    Modifier.padding(top = 8.dp),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(400),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
-            Text(
-                text = product.price.toString(),
-                Modifier.padding(top = 8.dp),
-                fontSize = 14.sp,
-                fontWeight = FontWeight(400),
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = product.quantity.toString(),
-                Modifier.padding(top = 8.dp),
-                fontSize = 14.sp,
-                fontWeight = FontWeight(400),
-                color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.bodyMedium
-            )
             Row(
                 Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.End
             ) {
                 IconButton(onClick = { onEdit(product) }) {
-                    Icon(Icons.Default.Edit, contentDescription = "Editar")
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = "Editar",
+                        tint = Color.Blue
+                    )
                 }
                 IconButton(onClick = { onDelete(product) }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Excluir")
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = "Excluir",
+                        tint = Color.Red
+                    )
                 }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    widthDp = 360,
+    heightDp = 640,
+    showSystemUi = true
+)
 @Composable
 private fun ProductItemPreview() {
     ProductItem(
