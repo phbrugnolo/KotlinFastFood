@@ -25,6 +25,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +48,12 @@ fun InsertSaleScreen(
     var selectedCustomer by remember { mutableStateOf<Customer?>(null) }
     var selectedProduct by remember { mutableStateOf<Product?>(null) }
     var quantity by remember { mutableStateOf("") }
-    val isValid = selectedCustomer != null && selectedProduct != null && quantity.toIntOrNull() != null
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    val isValid = selectedCustomer != null &&
+            selectedProduct != null &&
+            quantity.toIntOrNull() != null &&
+            (quantity.toIntOrNull()?.let { it > 0 && it <= (selectedProduct?.quantity ?: 0) } ?: false)
 
     Scaffold(
         topBar = {
@@ -81,16 +87,31 @@ fun InsertSaleScreen(
                 options = products,
                 selectedOption = selectedProduct,
                 onOptionSelected = { selectedProduct = it },
-                displayText =  { it.name }
+                displayText = { it.name }
             )
 
             OutlinedTextField(
                 value = quantity,
-                onValueChange = { quantity = it },
+                onValueChange = {
+                    quantity = it
+                    errorMessage = if (it.toIntOrNull() != null && selectedProduct != null && it.toInt() > (selectedProduct!!.quantity)) {
+                        "Quantidade excede o estoque disponível!"
+                    } else null
+                },
                 label = { Text("Quantidade") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = errorMessage != null
             )
+
+            errorMessage?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
 
             Button(
                 onClick = {
@@ -102,14 +123,18 @@ fun InsertSaleScreen(
                             totalPrice = quantity.toInt() * selectedProduct!!.price,
                             date = System.currentTimeMillis()
                         )
-                        viewModel.insertSale(sale)
-                        onBack()
+                        try {
+                            viewModel.insertSaleWithDecrement(sale)
+                            onBack()
+                        } catch (e: IllegalStateException) {
+                            errorMessage = e.message
+                        }
                     }
                 },
                 enabled = isValid,
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text("Save")
+                Text("Salvar")
             }
         }
     }

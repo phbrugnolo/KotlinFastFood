@@ -11,6 +11,7 @@ import com.example.fastfooda1.models.Sale
 import com.example.fastfooda1.models.SaleWithDetails
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -45,6 +46,23 @@ class SalesViewModel(
             initialValue = emptyList()
         )
 
-
     fun getSaleDetails(saleId: Int) = salesRepository.getSaleWithDetailsStream(saleId)
+
+    fun insertSaleWithDecrement(sale: Sale) = viewModelScope.launch {
+        val product = productsRepository.getProductStream(sale.productId)
+            .firstOrNull()
+
+        if (product != null) {
+            if (product.quantity >= sale.quantity) {
+                productsRepository.updateProduct(
+                    product.copy(quantity = product.quantity - sale.quantity)
+                )
+                salesRepository.insertSale(sale)
+            } else {
+                throw IllegalStateException("Estoque insuficiente para realizar a venda")
+            }
+        } else {
+            throw IllegalStateException("Produto não encontrado")
+        }
+    }
 }

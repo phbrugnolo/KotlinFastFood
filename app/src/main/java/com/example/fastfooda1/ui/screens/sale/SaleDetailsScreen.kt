@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.fastfooda1.extensions.formatDate
 import com.example.fastfooda1.viewmodels.SalesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,7 +80,7 @@ fun SaleDetailsScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "Data: ${saleDetails!!.sale.date}",
+                    text = "Data: ${formatDate(saleDetails!!.sale.date)}",
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
