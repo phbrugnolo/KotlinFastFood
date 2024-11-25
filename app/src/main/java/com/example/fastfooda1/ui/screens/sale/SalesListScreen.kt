@@ -41,10 +41,10 @@ fun SalesListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Sales") },
+                title = { Text("Vendas") },
                 actions = {
                     IconButton(onClick = onNavigateToInsertSale) {
-                        Icon(Icons.Default.Add, contentDescription = "+ Venda")
+                        Icon(Icons.Default.Add, contentDescription = "Realizar Compra")
                     }
                 }
             )
@@ -57,7 +57,7 @@ fun SalesListScreen(
                     .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Sem vendas disponiveis.", style = MaterialTheme.typography.bodyMedium)
+                Text("Sem vendas disponíveis.", style = MaterialTheme.typography.bodyMedium)
             }
         } else {
             LazyColumn(
@@ -79,22 +79,22 @@ fun SalesListScreen(
                                 .padding(16.dp)
                         ) {
                             Text(
-                                text = "Sale ID: ${sale.sale.id}",
+                                text = "ID da Compra: ${sale.sale.id}",
                                 style = MaterialTheme.typography.titleSmall
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Customer: ${sale.customer.name}",
+                                text = "Cliente: ${sale.customer.name}",
                                 style = MaterialTheme.typography.bodyMedium
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Product: ${sale.product.name}",
+                                text = "Produto: ${sale.product.name}",
                                 style = MaterialTheme.typography.bodyMedium
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "Total: $${sale.sale.totalPrice}",
+                                text = "Total: R$${sale.sale.totalPrice}",
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.primary
                             )

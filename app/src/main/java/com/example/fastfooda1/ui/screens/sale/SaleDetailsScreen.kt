@@ -35,7 +35,7 @@ fun SaleDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Sale Details") },
+                title = { Text("Detalhes da Compra") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -62,24 +62,24 @@ fun SaleDetailsScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Customer: ${saleDetails!!.customer.name}",
+                    text = "Cliente: ${saleDetails!!.customer.name}",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Product: ${saleDetails!!.product.name}",
+                    text = "Produto: ${saleDetails!!.product.name}",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Quantity: ${saleDetails!!.sale.quantity}",
+                    text = "Quantidade: ${saleDetails!!.sale.quantity}",
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = "Total Price: $${saleDetails!!.sale.totalPrice}",
+                    text = "Preço Total: $${saleDetails!!.sale.totalPrice}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "Date: ${saleDetails!!.sale.date}",
+                    text = "Data: ${saleDetails!!.sale.date}",
                     style = MaterialTheme.typography.bodyLarge
                 )
             }

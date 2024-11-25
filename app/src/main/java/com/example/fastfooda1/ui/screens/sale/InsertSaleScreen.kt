@@ -52,7 +52,7 @@ fun InsertSaleScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Add Sale") },
+                title = { Text("Realizar Compra") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -69,23 +69,25 @@ fun InsertSaleScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             CustomDropdownMenu(
-                label = "Select Customer",
+                label = "Selecione um Cliente",
                 options = customers,
                 selectedOption = selectedCustomer,
-                onOptionSelected = { selectedCustomer = it }
+                onOptionSelected = { selectedCustomer = it },
+                displayText = { it.name }
             )
 
             CustomDropdownMenu(
-                label = "Select Product",
+                label = "Selecione um Produto",
                 options = products,
                 selectedOption = selectedProduct,
-                onOptionSelected = { selectedProduct = it }
+                onOptionSelected = { selectedProduct = it },
+                displayText =  { it.name }
             )
 
             OutlinedTextField(
                 value = quantity,
                 onValueChange = { quantity = it },
-                label = { Text("Quantity") },
+                label = { Text("Quantidade") },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -118,7 +120,8 @@ fun <T> CustomDropdownMenu(
     label: String,
     options: List<T>,
     selectedOption: T?,
-    onOptionSelected: (T) -> Unit
+    onOptionSelected: (T) -> Unit,
+    displayText: (T) -> String
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -140,7 +143,7 @@ fun <T> CustomDropdownMenu(
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option.toString()) },
+                    text = { Text(displayText(option)) },
                     onClick = {
                         onOptionSelected(option)
                         expanded = false
