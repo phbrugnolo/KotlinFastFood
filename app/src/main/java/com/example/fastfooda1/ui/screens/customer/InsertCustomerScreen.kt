@@ -68,7 +68,11 @@ fun InsertCustomerScreen(viewModel: CustomersViewModel, onBack: () -> Unit) {
         )
 
         if (isLoading) {
-            CircularProgressIndicator(modifier = Modifier.padding(vertical = 16.dp).align(Alignment.CenterHorizontally))
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
         }
 
         TextField(
