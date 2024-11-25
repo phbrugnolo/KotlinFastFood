@@ -54,6 +54,10 @@ fun CustomerItem(customer: Customer, onEdit: () -> Unit) {
         Column(modifier = Modifier.weight(1f)) {
             Text(text = customer.name, style = MaterialTheme.typography.titleMedium)
             Text(text = customer.cpf, style = MaterialTheme.typography.bodyMedium)
+            Text(text = customer.cep, style = MaterialTheme.typography.bodyMedium)
+            Text(text = customer.logradouro.toString(), style = MaterialTheme.typography.bodyMedium)
+            Text(text = customer.bairro.toString(), style = MaterialTheme.typography.bodyMedium)
+            Text(text = customer.complemento.toString(), style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

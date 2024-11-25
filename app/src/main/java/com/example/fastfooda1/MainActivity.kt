@@ -1,6 +1,7 @@
 package com.example.fastfooda1
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -26,6 +27,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.fastfooda1.database.AppDataContainer
+import com.example.fastfooda1.models.ViaCepResponse
+import com.example.fastfooda1.models.ViaCepService
 import com.example.fastfooda1.ui.screens.customer.CustomerListScreen
 import com.example.fastfooda1.ui.screens.customer.EditCustomerScreen
 import com.example.fastfooda1.ui.screens.customer.InsertCustomerScreen
@@ -72,21 +75,9 @@ class MainActivity : ComponentActivity() {
     }
 
 
-//    private lateinit var cepController: CepController
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-//        val retrofit = Retrofit.Builder()
-//            .baseUrl("https://viacep.com.br/ws/")
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//        val service = retrofit.create(ViaCepService::class.java)
-//
-//        cepController = CepController(service)
-
         setContent {
             App(productsViewModel, customersViewModel, salesViewModel)
         }
@@ -98,6 +89,31 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     data object Customers : Screen("customers", "Customers", Icons.Default.Person)
     data object Sales : Screen("sales", "Sales", Icons.Default.ShoppingCart)
 }
+
+object RetrofitInstance {
+    private const val BASE_URL = "https://viacep.com.br/ws/"
+
+    private val retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    val api: ViaCepService by lazy {
+        retrofit.create(ViaCepService::class.java)
+    }
+}
+
+suspend fun getAddressFromCep(cep: String): ViaCepResponse? {
+    return try {
+        RetrofitInstance.api.getAddress(cep)
+    } catch (e: Exception) {
+        Log.e("getAddressFromCep", "Erro ao buscar endereço: ${e.message}")
+        null
+    }
+}
+
 
 @Composable
 fun App(
