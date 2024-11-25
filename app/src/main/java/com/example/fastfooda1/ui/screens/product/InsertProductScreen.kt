@@ -1,11 +1,17 @@
 package com.example.fastfooda1.ui.screens.product
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,37 +29,112 @@ fun InsertProductScreen(viewModel: ProductsViewModel, onBack: () -> Unit) {
     var name by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var quantity by remember { mutableStateOf("") }
+    var nameError by remember { mutableStateOf(false) }
+    var priceError by remember { mutableStateOf(false) }
+    var quantityError by remember { mutableStateOf(false) }
 
-    Column(Modifier.padding(16.dp)) {
-        TextField(
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
+    ) {
+        Text(
+            text = "Adicionar Novo Produto",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Nome do Produto
+        OutlinedTextField(
             value = name,
-            onValueChange = { name = it },
-            label = { Text("Nome do Produto") }
+            onValueChange = {
+                name = it
+                nameError = it.isEmpty()
+            },
+            label = { Text("Nome do Produto") },
+            isError = nameError,
+            modifier = Modifier.fillMaxWidth()
         )
-        TextField(
-            value = price,
-            onValueChange = { price = it },
-            label = { Text("Preço") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        TextField(
-            value = quantity,
-            onValueChange = { quantity = it },
-            label = { Text("Quantidade") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-        Button(onClick = {
-            viewModel.insertProduct(
-                Product(
-                    name = name,
-                    price = price.toDoubleOrNull() ?: 0.0,
-                    image = R.drawable.ic_launcher_background,
-                    quantity = quantity.toIntOrNull() ?: 0
-                )
+        if (nameError) {
+            Text(
+                text = "O nome do produto não pode ser vazio",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 4.dp)
             )
-            onBack()
-        }) {
-            Text("Salvar")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Preço
+        OutlinedTextField(
+            value = price,
+            onValueChange = {
+                price = it
+                priceError = it.toDoubleOrNull() == null && it.isNotEmpty()
+            },
+            label = { Text("Preço") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = priceError,
+            modifier = Modifier.fillMaxWidth()
+        )
+        if (priceError) {
+            Text(
+                text = "Digite um preço válido",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = quantity,
+            onValueChange = {
+                quantity = it
+                quantityError = it.toIntOrNull() == null && it.isNotEmpty()
+            },
+            label = { Text("Quantidade") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            isError = quantityError,
+            modifier = Modifier.fillMaxWidth()
+        )
+        if (quantityError) {
+            Text(
+                text = "Digite uma quantidade válida",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                if (name.isNotEmpty() && price.toDoubleOrNull() != null && quantity.toIntOrNull() != null) {
+                    viewModel.insertProduct(
+                        Product(
+                            name = name,
+                            price = price.toDouble(),
+                            image = R.drawable.ic_launcher_background,
+                            quantity = quantity.toInt()
+                        )
+                    )
+                    onBack()
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text("Salvar Produto")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(onClick = onBack) {
+            Text("Voltar", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
