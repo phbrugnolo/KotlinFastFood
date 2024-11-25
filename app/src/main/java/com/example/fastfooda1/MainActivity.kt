@@ -32,12 +32,17 @@ import com.example.fastfooda1.ui.screens.customer.InsertCustomerScreen
 import com.example.fastfooda1.ui.screens.product.EditProductScreen
 import com.example.fastfooda1.ui.screens.product.InsertProductScreen
 import com.example.fastfooda1.ui.screens.product.ProductListScreen
+import com.example.fastfooda1.ui.screens.sale.InsertSaleScreen
+import com.example.fastfooda1.ui.screens.sale.SaleDetailsScreen
+import com.example.fastfooda1.ui.screens.sale.SalesListScreen
 import com.example.fastfooda1.ui.theme.FastFoodA1Theme
 import com.example.fastfooda1.ui.theme.Storefront
 import com.example.fastfooda1.viewmodels.CustomersViewModel
 import com.example.fastfooda1.viewmodels.CustomersViewModelFactory
 import com.example.fastfooda1.viewmodels.ProductsViewModel
 import com.example.fastfooda1.viewmodels.ProductsViewModelFactory
+import com.example.fastfooda1.viewmodels.SalesViewModel
+import com.example.fastfooda1.viewmodels.SalesViewModelFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -58,6 +63,14 @@ class MainActivity : ComponentActivity() {
         CustomersViewModelFactory(customersRepository)
     }
 
+    private val salesRepository by lazy {
+        AppDataContainer(applicationContext).salesRepository
+    }
+
+    private val salesViewModel: SalesViewModel by viewModels {
+        SalesViewModelFactory(salesRepository, customersRepository, productsRepository)
+    }
+
 
 //    private lateinit var cepController: CepController
 
@@ -75,7 +88,7 @@ class MainActivity : ComponentActivity() {
 //        cepController = CepController(service)
 
         setContent {
-            App(productsViewModel, customersViewModel)
+            App(productsViewModel, customersViewModel, salesViewModel)
         }
     }
 }
@@ -89,7 +102,8 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 @Composable
 fun App(
     productsViewModel: ProductsViewModel,
-    customersViewModel: CustomersViewModel
+    customersViewModel: CustomersViewModel,
+    salesViewModel: SalesViewModel
 ) {
     FastFoodA1Theme {
         Surface {
@@ -103,6 +117,7 @@ fun App(
                     navController = navController,
                     productsViewModel = productsViewModel,
                     customersViewModel = customersViewModel,
+                    salesViewModel = salesViewModel,
                     modifier = Modifier.padding(innerPadding)
                 )
             }
@@ -115,6 +130,7 @@ fun NavigationHost(
     navController: NavHostController,
     productsViewModel: ProductsViewModel,
     customersViewModel: CustomersViewModel,
+    salesViewModel: SalesViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -181,7 +197,32 @@ fun NavigationHost(
         }
 
         composable(Screen.Sales.route) {
-            Text("Sales Screen")
+            SalesListScreen(
+                viewModel = salesViewModel,
+                onNavigateToInsertSale = { navController.navigate("add_sale") },
+                onNavigateToSaleDetails = { saleId ->
+                    navController.navigate("sale_details/$saleId")
+                }
+            )
+        }
+        composable("add_sale") {
+            InsertSaleScreen(
+                viewModel = salesViewModel,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = "sale_details/{saleId}",
+            arguments = listOf(navArgument("saleId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val saleId = backStackEntry.arguments?.getInt("saleId")
+            if (saleId != null) {
+                SaleDetailsScreen(
+                    viewModel = salesViewModel,
+                    saleId = saleId,
+                    onBack = { navController.popBackStack() }
+                )
+            }
         }
     }
 }

@@ -11,13 +11,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ProductsViewModel(private val repository: ProductsRepository) : ViewModel() {
-
-    val products: StateFlow<List<Product>> = repository.getAllProductsStream()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
+    val products: StateFlow<List<Product>> = repository.getAllProductsStream().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
 
     fun getProduct(id: Int) = repository.getProductStream(id)
 
@@ -39,5 +37,4 @@ class ProductsViewModel(private val repository: ProductsRepository) : ViewModel(
             repository.deleteProduct(product)
         }
     }
-
 }

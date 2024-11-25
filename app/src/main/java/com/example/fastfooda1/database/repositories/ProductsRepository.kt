@@ -4,7 +4,6 @@ import com.example.fastfooda1.models.Product
 import kotlinx.coroutines.flow.Flow
 
 interface ProductsRepository {
-
     fun getAllProductsStream(): Flow<List<Product>>
 
     fun getProductStream(id: Int): Flow<Product?>
