@@ -97,7 +97,15 @@ fun CustomerItem(customer: Customer, onEdit: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "Endereço: ${customer.logradouro}, ${customer.complemento} Bairro: ${customer.bairro}, Cidade: ${customer.localidade}",
+                text = "Endereço: ${customer.logradouro}, ${customer.complemento}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Bairro: ${customer.bairro}",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = "Cidade: ${customer.localidade}",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
