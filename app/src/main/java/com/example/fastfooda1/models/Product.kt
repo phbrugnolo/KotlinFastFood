@@ -1,6 +1,5 @@
 package com.example.fastfooda1.models
 
-import androidx.annotation.DrawableRes
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,6 +9,6 @@ data class Product(
     val id: Int = 0,
     val name: String,
     val price: Double,
-    @DrawableRes val image: Int,
+    val imagePath: String? = null,
     val quantity: Int
 )

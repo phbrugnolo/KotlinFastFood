@@ -11,7 +11,7 @@ import com.example.fastfooda1.models.Customer
 import com.example.fastfooda1.models.Product
 import com.example.fastfooda1.models.Sale
 
-@Database(entities = [Product::class, Customer::class, Sale::class], version = 5, exportSchema = true)
+@Database(entities = [Product::class, Customer::class, Sale::class], version = 7, exportSchema = true)
 abstract class FastFoodDatabase : RoomDatabase() {
 
     abstract fun productDao(): ProductDao

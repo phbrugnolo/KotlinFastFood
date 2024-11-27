@@ -25,6 +25,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +41,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import com.example.fastfooda1.R
 import com.example.fastfooda1.models.Product
 import com.example.fastfooda1.ui.theme.Purple40
 import com.example.fastfooda1.ui.theme.PurpleGrey40
@@ -53,30 +56,44 @@ fun ProductListScreen(
 ) {
     val products by viewModel.products.collectAsState()
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(vertical = 8.dp)
-        ) {
-            items(products) { product ->
-                ProductItem(
-                    product = product,
-                    onEdit = { onNavigateToEditProduct(product.id) },
-                    onDelete = { viewModel.deleteProduct(product) }
-                )
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onNavigateToInsertProduct,
+                shape = RoundedCornerShape(50),
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Adicionar Produto")
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        FloatingActionButton(
-            onClick = onNavigateToInsertProduct,
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(8.dp)
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Icon(Icons.Default.Add, contentDescription = "Adicionar Produto")
+            Text(
+                text = "Produtos",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(vertical = 8.dp)
+            ) {
+                items(products) { product ->
+                    ProductItem(
+                        product = product,
+                        onEdit = { onNavigateToEditProduct(product.id) },
+                        onDelete = { viewModel.deleteProduct(product) }
+                    )
+                }
+            }
         }
     }
 }
@@ -115,7 +132,10 @@ fun ProductItem(
                     )
             ) {
                 Image(
-                    painter = painterResource(id = product.image),
+                    painter = rememberAsyncImagePainter(
+                        model = product.imagePath,
+                        error = painterResource(id = R.drawable.ic_launcher_background)
+                    ),
                     contentDescription = "Imagem do Produto",
                     modifier = Modifier
                         .size(imageSize)
@@ -177,4 +197,5 @@ fun ProductItem(
         }
     }
 }
+
 

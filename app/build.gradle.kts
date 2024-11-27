@@ -64,6 +64,8 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
+    // Upload de Imagens
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     implementation(libs.androidx.navigation.runtime.ktx)
     testImplementation(libs.junit)

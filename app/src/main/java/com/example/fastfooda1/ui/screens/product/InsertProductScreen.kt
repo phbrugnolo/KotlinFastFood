@@ -1,11 +1,17 @@
 package com.example.fastfooda1.ui.screens.product
 
+import androidx.compose.foundation.Image
+import coil.compose.rememberAsyncImagePainter
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -18,10 +24,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.fastfooda1.R
 import com.example.fastfooda1.models.Product
+import com.example.fastfooda1.util.saveImageToInternalStorage
 import com.example.fastfooda1.viewmodels.ProductsViewModel
 
 @Composable
@@ -32,6 +41,14 @@ fun InsertProductScreen(viewModel: ProductsViewModel, onBack: () -> Unit) {
     var nameError by remember { mutableStateOf(false) }
     var priceError by remember { mutableStateOf(false) }
     var quantityError by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val imageUri = remember { mutableStateOf<Uri?>(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            imageUri.value = it
+        }
+    }
+
 
     Column(
         modifier = Modifier
@@ -109,16 +126,39 @@ fun InsertProductScreen(viewModel: ProductsViewModel, onBack: () -> Unit) {
             )
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+
+        Button(
+            onClick = { launcher.launch("image/*") },
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text("Selecionar Imagem")
+        }
+
+        imageUri.value?.let { uri ->
+            Image(
+                painter = rememberAsyncImagePainter(uri),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(150.dp)
+                    .clip(MaterialTheme.shapes.medium)
+            )
+        }
+
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
                 if (name.isNotEmpty() && price.toDoubleOrNull() != null && quantity.toIntOrNull() != null) {
+                    val imagePath = saveImageToInternalStorage(context, imageUri.value!!)
                     viewModel.insertProduct(
                         Product(
                             name = name,
                             price = price.toDouble(),
-                            image = R.drawable.ic_launcher_background,
+                            imagePath = imagePath,
                             quantity = quantity.toInt()
                         )
                     )
