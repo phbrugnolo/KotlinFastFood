@@ -1,4 +1,4 @@
-package com.example.fastfooda1.extensions
+package com.example.fastfooda1.util
 
 import java.text.SimpleDateFormat
 import java.util.Locale

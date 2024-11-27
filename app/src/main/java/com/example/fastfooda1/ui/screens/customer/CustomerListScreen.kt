@@ -97,19 +97,9 @@ fun CustomerItem(customer: Customer, onEdit: () -> Unit) {
                 style = MaterialTheme.typography.bodyMedium
             )
             Text(
-                text = "Logradouro: ${customer.logradouro}",
+                text = "Endereço: ${customer.logradouro}, ${customer.complemento} Bairro: ${customer.bairro}, Cidade: ${customer.localidade}",
                 style = MaterialTheme.typography.bodyMedium
             )
-            Text(
-                text = "Bairro: ${customer.bairro}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            if (customer.complemento!!.isNotEmpty()) {
-                Text(
-                    text = "Complemento: ${customer.complemento}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
         }
     }
 }
