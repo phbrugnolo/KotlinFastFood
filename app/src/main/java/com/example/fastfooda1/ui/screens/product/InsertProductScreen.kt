@@ -1,10 +1,9 @@
 package com.example.fastfooda1.ui.screens.product
 
-import androidx.compose.foundation.Image
-import coil.compose.rememberAsyncImagePainter
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.example.fastfooda1.R
+import coil.compose.rememberAsyncImagePainter
 import com.example.fastfooda1.models.Product
 import com.example.fastfooda1.util.saveImageToInternalStorage
 import com.example.fastfooda1.viewmodels.ProductsViewModel
@@ -153,7 +152,9 @@ fun InsertProductScreen(viewModel: ProductsViewModel, onBack: () -> Unit) {
         Button(
             onClick = {
                 if (name.isNotEmpty() && price.toDoubleOrNull() != null && quantity.toIntOrNull() != null) {
-                    val imagePath = saveImageToInternalStorage(context, imageUri.value!!)
+                    val imagePath = imageUri.value?.let {
+                        saveImageToInternalStorage(context, it)
+                    }
                     viewModel.insertProduct(
                         Product(
                             name = name,
@@ -170,6 +171,7 @@ fun InsertProductScreen(viewModel: ProductsViewModel, onBack: () -> Unit) {
         ) {
             Text("Salvar Produto")
         }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 

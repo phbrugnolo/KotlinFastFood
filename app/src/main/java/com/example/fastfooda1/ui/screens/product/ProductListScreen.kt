@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -48,6 +50,7 @@ import com.example.fastfooda1.ui.theme.Purple40
 import com.example.fastfooda1.ui.theme.PurpleGrey40
 import com.example.fastfooda1.viewmodels.ProductsViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
     viewModel: ProductsViewModel,
@@ -57,15 +60,15 @@ fun ProductListScreen(
     val products by viewModel.products.collectAsState()
 
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onNavigateToInsertProduct,
-                shape = RoundedCornerShape(50),
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Adicionar Produto")
-            }
+        topBar = {
+            TopAppBar(
+                title = { Text("Produtos") },
+                actions = {
+                    IconButton(onClick = onNavigateToInsertProduct) {
+                        Icon(Icons.Default.Add, contentDescription = "Cadastrar Produto")
+                    }
+                }
+            )
         }
     ) { innerPadding ->
         Column(
@@ -73,15 +76,6 @@ fun ProductListScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Text(
-                text = "Produtos",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                color = MaterialTheme.colorScheme.onSurface
-            )
-
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(vertical = 8.dp)

@@ -41,7 +41,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.rememberAsyncImagePainter
 
-
 @Composable
 fun EditProductScreen(
     viewModel: ProductsViewModel,
@@ -84,7 +83,7 @@ fun EditProductScreen(
                     .clickable { imagePickerLauncher.launch("image/*") },
                 contentAlignment = Alignment.Center
             ) {
-                if (imageUri.isNotEmpty()) {
+                if (!imageUri.isNullOrEmpty()) {
                     Image(
                         painter = rememberAsyncImagePainter(imageUri),
                         contentDescription = "Imagem do Produto",
@@ -102,7 +101,6 @@ fun EditProductScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Nome do Produto
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
@@ -112,7 +110,6 @@ fun EditProductScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Preço
             OutlinedTextField(
                 value = price,
                 onValueChange = { price = it },
@@ -123,7 +120,6 @@ fun EditProductScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Quantidade
             OutlinedTextField(
                 value = quantity,
                 onValueChange = { quantity = it },
@@ -134,7 +130,6 @@ fun EditProductScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botão Salvar
             Button(
                 onClick = {
                     viewModel.updateProduct(
@@ -155,7 +150,6 @@ fun EditProductScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botão Voltar
             TextButton(onClick = onBack) {
                 Text("Voltar", style = MaterialTheme.typography.bodyMedium)
             }
